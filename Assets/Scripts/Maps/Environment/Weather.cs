@@ -12,6 +12,9 @@ namespace DarkLegend.Maps.Environment
         [Tooltip("Thời tiết hiện tại / Current weather")]
         [SerializeField] private WeatherType currentWeather = WeatherType.Clear;
         
+        // Store original camera settings
+        private float originalFarClipPlane;
+        
         [Tooltip("Thời gian chuyển đổi (giây) / Transition time")]
         [SerializeField] private float transitionTime = 5f;
         
@@ -72,6 +75,12 @@ namespace DarkLegend.Maps.Environment
             weatherAudioSource.loop = true;
             weatherAudioSource.spatialBlend = 0f; // 2D sound
             weatherAudioSource.volume = 0.5f;
+            
+            // Store original camera settings
+            if (Camera.main != null)
+            {
+                originalFarClipPlane = Camera.main.farClipPlane;
+            }
             
             // Set initial weather
             SetWeather(currentWeather, true);
@@ -189,6 +198,12 @@ namespace DarkLegend.Maps.Environment
         {
             RenderSettings.fogDensity = 0f;
             RenderSettings.fog = false;
+            
+            // Restore original camera settings
+            if (Camera.main != null && originalFarClipPlane > 0)
+            {
+                Camera.main.farClipPlane = originalFarClipPlane;
+            }
         }
         
         /// <summary>
@@ -253,9 +268,9 @@ namespace DarkLegend.Maps.Environment
             RenderSettings.fogColor = new Color(0.7f, 0.7f, 0.7f);
             
             // Reduce visibility
-            if (affectsVisibility)
+            if (affectsVisibility && Camera.main != null && originalFarClipPlane > 0)
             {
-                Camera.main.farClipPlane *= (1f - visibilityReduction);
+                Camera.main.farClipPlane = originalFarClipPlane * (1f - visibilityReduction);
             }
         }
         
@@ -282,9 +297,9 @@ namespace DarkLegend.Maps.Environment
             RenderSettings.fogColor = new Color(0.8f, 0.7f, 0.5f);
             
             // Severe visibility reduction
-            if (affectsVisibility)
+            if (affectsVisibility && Camera.main != null && originalFarClipPlane > 0)
             {
-                Camera.main.farClipPlane *= (1f - visibilityReduction * 1.5f);
+                Camera.main.farClipPlane = originalFarClipPlane * (1f - visibilityReduction * 1.5f);
             }
         }
         

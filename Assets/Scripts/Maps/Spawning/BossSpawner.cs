@@ -218,7 +218,12 @@ namespace DarkLegend.Maps.Spawning
             
             if (announcementSound != null)
             {
-                AudioSource.PlayClipAtPoint(announcementSound, Camera.main.transform.position);
+                // Play as 2D sound for server-wide announcement
+                AudioSource tempSource = new GameObject("TempAnnouncementAudio").AddComponent<AudioSource>();
+                tempSource.clip = announcementSound;
+                tempSource.spatialBlend = 0f; // 2D sound
+                tempSource.Play();
+                Destroy(tempSource.gameObject, announcementSound.length);
             }
         }
         
@@ -234,7 +239,12 @@ namespace DarkLegend.Maps.Spawning
             
             if (announcementSound != null)
             {
-                AudioSource.PlayClipAtPoint(announcementSound, Camera.main.transform.position);
+                // Play as 2D sound for server-wide announcement
+                AudioSource tempSource = new GameObject("TempAnnouncementAudio").AddComponent<AudioSource>();
+                tempSource.clip = announcementSound;
+                tempSource.spatialBlend = 0f; // 2D sound
+                tempSource.Play();
+                Destroy(tempSource.gameObject, announcementSound.length);
             }
         }
         
